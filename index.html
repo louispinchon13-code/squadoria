@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Squadoria - Trouve ta squad</title>
+<style>
+*{box-sizing:border-box}body{font-family:Arial;background:#FDF8EE;color:#1A3C34;margin:0;padding:0}
+header{background:#FDF8EE;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #E8DDC5;position:sticky;top:0}
+header b{font-size:24px}header span{font-size:12px;color:#7a8a84;display:block}
+.wrap{max-width:900px;margin:auto;padding:20px}
+.hero{background:#1A3C34;color:white;border-radius:24px;padding:28px}
+.hero h1{font-size:34px;margin:0;line-height:1.1}.hero p{color:#D8E8D8}
+.btn{background:#1A3C34;color:white;border:0;padding:12px 18px;border-radius:999px;font-weight:bold;cursor:pointer}
+.btn-gold{background:#C9A86A}
+.tabs{display:flex;gap:8px;margin:18px 0;flex-wrap:wrap}
+.tab{padding:10px 16px;border-radius:999px;background:white;border:1px solid #E8DDC5;cursor:pointer;font-weight:bold}
+.tab.active{background:#1A3C34;color:white}
+.card{background:white;border:1px solid #ECE3CD;border-radius:18px;padding:16px;margin-bottom:12px}
+input,select{width:100%;padding:12px;border-radius:12px;border:1px solid #E8DDC5;margin:6px 0}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<header><div><b>Squadoria</b><span>Trouve ta squad</span></div><div>100% gratuit • Zéro pub</div></header>
+<div class="wrap">
+<div class="hero"><h1>Trouve ta squad.<br>Joue ensemble, sur console.</h1><p>Choisis ton jeu, trouve des joueurs, ajoute-les, discute et lance ta partie.</p><button class="btn-gold btn" onclick="alert('Bienvenue sur Squadoria !')">Créer un compte</button></div>
+<div class="tabs">
+<button class="tab active" onclick="show('accueil',this)">Accueil</button>
+<button class="tab" onclick="show('messages',this)">Messages</button>
+<button class="tab" onclick="show('groupes',this)">Groupes</button>
+<button class="tab" onclick="show('boost',this)">Boost ⭐</button>
+</div>
+<div id="accueil">
+<input placeholder="Rechercher un jeu... ex: FC 26, 【entity-Fortnite¦canonical_name=Fortnite】" oninput="filterGames(this.value)">
+<div id="players"></div>
+</div>
+<div id="messages" class="hidden"><div class="card"><b>Messages</b><p>Yassine : Yo, chaud pour FC 26 ce soir ?</p><input id="msg" placeholder="Écris ton message..."><button class="btn" onclick="sendMsg()">Envoyer</button><div id="chat"></div></div></div>
+<div id="groupes" class="hidden"><div class="card"><b>Groupes</b><p>Squad FC 26 Maroc - 128 membres</p><p>Valorant Girls & Boys - 84 membres</p><p>GTA RP Maroc - 212 membres</p><input id="gname" placeholder="Nom du groupe ex: Squad FC 26"><button class="btn" onclick="createGroup()">+ Créer un groupe</button><div id="glist"></div></div></div>
+<div id="boost" class="hidden"><div class="card" style="background:#1A3C34;color:white"><b>⭐ Boost Soutien - 1 seul achat, à vie</b><p style="color:#CFE2CF">Tu soutiens Squadoria pour qu'elle reste gratuite et sans pub. Tu débloques + d'ajouts par jour au-delà des 50 gratuits.</p><select onchange="upd(this.value)"><option value="49 MAD">MAD - 49 MAD</option><option value="4,99 €">EUR - 4,99 €</option><option value="4,99 $">USD - 4,99 $</option><option value="3,99 £">GBP - 3,99 £</option></select><p>Prix : <b id="price">49 MAD</b></p><button class="btn btn-gold" onclick="alert('Paiement test réussi ! Boost débloqué ⭐')">Payer en test</button></div></div>
+</div>
+<script>
+const players=[["Yassine","FC 26","PS5"],["Salma","Valorant","PC"],["Adam","【entity-Fortnite¦canonical_name=Fortnite】","PS5"],["Imane","GTA V","PS5"],["Karim","Call of Duty","Xbox"],["Lina","Rocket League","PS5"],["Omar","Minecraft","PC"],["Sara","Apex Legends","PS5"],["Mehdi","eFootball","Mobile"],["Lina","FC 26","PS5"]];
+function render(list){document.getElementById('players').innerHTML=list.map(p=>`<div class="card"><b>${p[0]} - ${p[1]} - ${p[2]}</b><br>🟢 En ligne - Dispo ce soir <button class="btn" style="float:right" onclick="this.textContent='✓ Ajouté'">+ Ajouter</button></div>`).join('')}
+render(players);
+function filterGames(v){render(players.filter(p=>(p[1]+p[0]).toLowerCase().includes(v.toLowerCase())))}
+function show(id,btn){['accueil','messages','groupes','boost'].forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==id));document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active')}
+function sendMsg(){let v=document.getElementById('msg').value;if(!v)return;document.getElementById('chat').innerHTML+='<p><b>Moi :</b> '+v+'</p>';document.getElementById('msg').value=''}
+function createGroup(){let v=document.getElementById('gname').value;if(!v)return;document.getElementById('glist').innerHTML+='<div class="card"><b>'+v+'</b> - 1 membre - Nouveau groupe</div>';document.getElementById('gname').value=''}
+function upd(v){document.getElementById('price').textContent=v}
+</script>
+</body>
+</html>
