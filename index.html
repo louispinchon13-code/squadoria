@@ -4,120 +4,87 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Squadoria - Trouve ta squad</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box} body{margin:0;font-family:Arial;background:#FDF8EE;color:#1A3C34}
-header{background:#FDF8EE;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #E8DDC5;position:sticky;top:0}
+header{background:#FDF8EE;padding:16px 20px;display:flex;justify-content:space-between;border-bottom:1px solid #E8DDC5;position:sticky;top:0}
 .wrap{max-width:900px;margin:auto;padding:20px}
 .hero{background:#1A3C34;color:#fff;border-radius:24px;padding:26px}
-.hero h1{margin:0;font-size:32px;line-height:1.1}.hero p{color:#D8E8D8}
 .btn{background:#1A3C34;color:#fff;border:0;padding:11px 16px;border-radius:999px;font-weight:bold;cursor:pointer}
 .btn-gold{background:#C9A86A;color:#1A3C34}
-.btn-small{padding:8px 12px;font-size:13px}
-.tabs{display:flex;gap:8px;margin:18px 0;flex-wrap:wrap}
 .tab{padding:10px 16px;border-radius:999px;background:#fff;border:1px solid #E8DDC5;cursor:pointer;font-weight:bold}
 .tab.active{background:#1A3C34;color:#fff}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
-.chip{padding:8px 12px;border-radius:999px;background:#fff;border:1px solid #E8DDC5;cursor:pointer;font-size:13px}
-.chip.active{background:#C9A86A;color:#1A3C34;font-weight:bold}
 .card{background:#fff;border:1px solid #ECE3CD;border-radius:18px;padding:16px;margin-bottom:12px}
 input,select{width:100%;padding:12px;border-radius:12px;border:1px solid #E8DDC5;margin:6px 0}
-.hidden{display:none}.flex{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.msg{background:#F3EEDF;padding:10px 12px;border-radius:12px;margin:6px 0}
+.hidden{display:none}.msg{background:#F3EEDF;padding:10px 12px;border-radius:12px;margin:6px 0}
 </style>
 </head>
 <body>
-<header><div><b style="font-size:24px">Squadoria</b><div style="font-size:12px;color:#7a8a84">Trouve ta squad</div></div><div>100% gratuit • Zéro pub</div></header>
+<header><div><b style="font-size:24px">Squadoria</b><div style="font-size:12px;color:#7a8a84">Trouve ta squad - VRAIE APP</div></div><div>100% gratuit • Zéro pub</div></header>
 <div class="wrap">
-<div class="hero"><h1>Trouve ta squad.<br>Joue ensemble, sur console.</h1><p>Choisis ton jeu, ajoute des joueurs, discute et lance ta partie.</p><p id="compteur">Ajouts aujourd'hui : <b>0 / 50 gratuits</b></p></div>
-<div class="tabs">
-<button class="tab active" onclick="showTab('accueil',this)">Accueil</button>
-<button class="tab" onclick="showTab('messages',this)">Messages</button>
-<button class="tab" onclick="showTab('groupes',this)">Groupes</button>
-<button class="tab" onclick="showTab('boost',this)">Boost ⭐</button>
+<div class="hero"><h1>Trouve ta squad.<br>Joue ensemble, sur console.</h1><p>Crée ton vrai profil, il apparaît pour tout le monde.</p></div>
+<div style="display:flex;gap:8px;margin:18px 0">
+<button class="tab active" onclick="showTab('accueil',this)">Joueurs réels</button>
+<button class="tab" onclick="showTab('messages',this)">Messages réels</button>
 </div>
-
 <div id="accueil">
-<input id="search" placeholder="Rechercher un jeu ou un joueur... ex: FC 26, Yassine" oninput="renderPlayers()">
-<div class="chips" id="chips"></div>
-<div id="players"></div>
+<div class="card"><b>Créer mon vrai profil</b>
+<input id="pseudo" placeholder="Ton pseudo ex: Louis">
+<select id="jeu"><option>FC 26</option><option>Fortnite</option><option>Valorant</option><option>GTA V</option><option>Call of Duty</option><option>Rocket League</option><option>Minecraft</option><option>Apex Legends</option><option>eFootball</option></select>
+<select id="console"><option>PS5</option><option>Xbox</option><option>PC</option><option>Mobile</option></select>
+<button class="btn btn-gold" onclick="createProfile()">+ Publier mon profil</button><div id="profilOk"></div></div>
+<input id="search" placeholder="Rechercher un vrai joueur..." oninput="renderProfiles()">
+<div id="players"><p>Chargement des vrais joueurs...</p></div>
 </div>
-
 <div id="messages" class="hidden">
-<div class="card"><b>Messages</b><div id="chat"><div class="msg"><b>Yassine :</b> Yo, chaud pour FC 26 ce soir</div></div><input id="msgInput" placeholder="Écris ton message..."><button class="btn" onclick="sendMsg()">Envoyer</button></div>
-</div>
-
-<div id="groupes" class="hidden">
-<div class="card"><b>Groupes</b><div id="glist"></div><input id="gname" placeholder="Nom du groupe ex: Squad FC 26 Maroc"><button class="btn" onclick="createGroup()">+ Créer un groupe</button></div>
-</div>
-
-<div id="boost" class="hidden">
-<div class="card" style="background:#1A3C34;color:#fff"><b>⭐ Boost Soutien - 1 seul achat, à vie</b><p style="color:#CFE2CF">Tu soutiens Squadoria pour qu'elle reste gratuite et sans pub. Tu passes à 200 ajouts par jour, badge Soutien et mise en avant douce.</p><select id="devise" onchange="updPrice()"><option value="49 MAD">Maroc - 49 MAD</option><option value="4,99 €">France / Europe - 4,99 €</option><option value="4,99 $">USA - 4,99 $</option><option value="3,99 £">UK - 3,99 £</option><option value="6,99 $">Canada - 6,99 $</option></select><p>Prix : <b id="price">49 MAD</b></p><button class="btn btn-gold" onclick="buyBoost()">Débloquer le Boost</button><div id="boostOk"></div></div>
+<div class="card"><b>Messages réels</b><div id="chat"></div><input id="msgPseudo" placeholder="Ton pseudo"><input id="msgInput" placeholder="Ton message..."><button class="btn" onclick="sendMsg()">Envoyer</button></div>
 </div>
 </div>
-
 <script>
-const players=[
-{name:"Yassine",game:"FC 26",console:"PS5",status:"En ligne"},
-{name:"Salma",game:"Valorant",console:"PC",status:"En ligne"},
-{name:"Adam",game:"Fortnite",console:"PS5",status:"En ligne"},
-{name:"Imane",game:"GTA V",console:"PS5",status:"Il y a 5 min"},
-{name:"Karim",game:"Call of Duty",console:"Xbox",status:"En ligne"},
-{name:"Lina",game:"Rocket League",console:"PS5",status:"En ligne"},
-{name:"Omar",game:"Minecraft",console:"PC",status:"En ligne"},
-{name:"Sara",game:"Apex Legends",console:"PS5",status:"Il y a 12 min"},
-{name:"Mehdi",game:"eFootball",console:"Mobile",status:"En ligne"},
-{name:"Nora",game:"FC 26",console:"PS5",status:"En ligne"},
-{name:"Yanis",game:"Fortnite",console:"PS5",status:"En ligne"},
-{name:"Aya",game:"Valorant",console:"PC",status:"En ligne"}
-];
-const games=["Tous","FC 26","Fortnite","Valorant","GTA V","Call of Duty","Rocket League","Minecraft","Apex Legends","eFootball"];
-let currentGame="Tous"; let ajouts=0;
-function renderChips(){
-document.getElementById("chips").innerHTML=games.map(g=>`<button class="chip ${g===currentGame?'active':''}" onclick="setGame('${g}')">${g}</button>`).join("");
+const SUPABASE_URL = "https://ubfsdmbwyvzzenitpszd.supabase.co";
+const SUPABASE_KEY = "sb_publishable_-1pvG0SQOsZzDJTPok_I1g_WVcw4TTq";
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let allProfiles = [];
+async function loadProfiles(){
+let {data} = await sb.from("profiles").select("*").order("created_at",{ascending:false});
+allProfiles = data || [];
+renderProfiles();
 }
-function setGame(g){currentGame=g;renderChips();renderPlayers();}
-function renderPlayers(){
-let q=document.getElementById("search").value.toLowerCase();
-let list=players.filter(p=>(currentGame==="Tous"||p.game===currentGame)&&(p.name.toLowerCase().includes(q)||p.game.toLowerCase().includes(q)));
-document.getElementById("players").innerHTML=list.map(p=>`<div class="card"><div class="flex"><div><b>${p.name} - ${p.game}</b><div>${p.console} • ${p.status}</div></div><div><button class="btn btn-small" onclick="addPlayer(this,'${p.name}')">+ Ajouter</button> <button class="btn btn-small btn-gold" onclick="goMessage('${p.name}')">Message</button></div></div></div>`).join("")||"<p>Aucun joueur trouvé.</p>";
+function renderProfiles(){
+let q = document.getElementById("search").value.toLowerCase();
+let list = allProfiles.filter(p=>(p.pseudo||"").toLowerCase().includes(q)||(p.jeu||"").toLowerCase().includes(q));
+document.getElementById("players").innerHTML = list.length ? list.map(p=>`<div class="card"><b>${p.pseudo} - ${p.jeu}</b><div>${p.console} • Vrai joueur</div></div>`).join("") : "<p>Aucun vrai profil pour l'instant. Sois le premier.</p>";
 }
-function addPlayer(btn,name){
-if(btn.textContent.includes("Ajouté")) return;
-btn.textContent="✓ Ajouté"; ajouts++;
-document.getElementById("compteur").innerHTML=`Ajouts aujourd'hui : <b>${ajouts} / 50 gratuits</b>`;
-document.getElementById("chat").innerHTML+=`<div class="msg"><b>Toi :</b> Demande d'ami envoyée à ${name} ✅</div>`;
+async function createProfile(){
+let pseudo=document.getElementById("pseudo").value;
+let jeu=document.getElementById("jeu").value;
+let consoleV=document.getElementById("console").value;
+if(!pseudo) {document.getElementById("profilOk").innerHTML="Mets ton pseudo."; return;}
+let {error} = await sb.from("profiles").insert([{pseudo:pseudo, jeu:jeu, console:consoleV}]);
+if(error){document.getElementById("profilOk").innerHTML="Erreur : "+error.message; return;}
+document.getElementById("profilOk").innerHTML="✅ Profil publié, tout le monde peut te voir.";
+document.getElementById("pseudo").value="";
+loadProfiles();
+}
+async function loadMessages(){
+let {data} = await sb.from("messages").select("*").order("created_at",{ascending:true}).limit(50);
+document.getElementById("chat").innerHTML = (data||[]).map(m=>`<div class="msg"><b>${m.pseudo} :</b> ${m.texte}</div>`).join("") || "<p>Aucun message.</p>";
+}
+async function sendMsg(){
+let pseudo=document.getElementById("msgPseudo").value;
+let texte=document.getElementById("msgInput").value;
+if(!pseudo||!texte) return;
+await sb.from("messages").insert([{pseudo:pseudo, texte:texte}]);
+document.getElementById("msgInput").value="";
+loadMessages();
 }
 function showTab(id,btn){
-["accueil","messages","groupes","boost"].forEach(x=>document.getElementById(x).classList.toggle("hidden",x!==id));
+["accueil","messages"].forEach(x=>document.getElementById(x).classList.toggle("hidden",x!==id));
 document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active")); btn.classList.add("active");
+if(id==="messages") loadMessages();
 }
-function goMessage(name){
-document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
-document.querySelectorAll(".tab")[1].classList.add("active");
-showTab("messages",document.querySelectorAll(".tab")[1]);
-document.getElementById("chat").innerHTML+=`<div class="msg"><b>Toi :</b> Salut ${name}, chaud pour jouer ensemble</div>`;
-document.getElementById("msgInput").value=""; document.getElementById("msgInput").focus();
-}
-function sendMsg(){
-let v=document.getElementById("msgInput").value; if(!v) return;
-document.getElementById("chat").innerHTML+=`<div class="msg"><b>Moi :</b> ${v}</div>`;
-document.getElementById("msgInput").value="";
-setTimeout(()=>{document.getElementById("chat").innerHTML+=`<div class="msg"><b>Yassine :</b> Yes chaud, on lance à 21h 🎮</div>`},800);
-}
-const groupesInit=[{n:"Squad FC 26 Maroc",m:128},{n:"Valorant Girls & Boys",m:84},{n:"GTA RP Maroc",m:212}];
-function renderGroups(){
-document.getElementById("glist").innerHTML=groupesInit.map((g,i)=>`<div class="card"><div class="flex"><div><b>${g.n}</b><div>${g.m} membres</div></div><button class="btn btn-small" onclick="this.textContent='✓ Rejoint';this.style.background='#C9A86A'">Rejoindre</button></div></div>`).join("");
-}
-function createGroup(){
-let v=document.getElementById("gname").value; if(!v) return;
-groupesInit.unshift({n:v,m:1}); renderGroups(); document.getElementById("gname").value="";
-}
-function updPrice(){document.getElementById("price").textContent=document.getElementById("devise").value;}
-function buyBoost(){
-document.getElementById("boostOk").innerHTML="<p style='color:#C9A86A'><b>✅ Boost activé en test. Tu es maintenant à 200 ajouts par jour + badge Soutien.</b></p>";
-document.getElementById("compteur").innerHTML="Ajouts aujourd'hui : <b>"+ajouts+" / 200 avec Boost ⭐</b>";
-}
-renderChips(); renderPlayers(); renderGroups();
+loadProfiles(); loadMessages();
+setInterval(()=>{loadProfiles(); loadMessages();}, 5000);
 </script>
 </body>
 </html>
