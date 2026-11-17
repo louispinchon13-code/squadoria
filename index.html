@@ -7,135 +7,76 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Arial;background:#FDF8EE;color:#1A3C34}
-header{background:#FDF8EE;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #E8DDC5;position:sticky;top:0;z-index:10}
+header{background:#FDF8EE;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #E8DDC5;position:sticky;top:0}
 .logo{font-size:26px;font-weight:900}.logo span{color:#C9A86A}
 .wrap{max-width:1000px;margin:auto;padding:18px}
 .hero{background:#1A3C34;color:#fff;border-radius:28px;padding:28px}
-.hero h1{margin:0;font-size:34px;line-height:1.1}.hero p{opacity:.85}
+.hero h1{margin:0;font-size:34px;line-height:1.1}
 .pill{display:inline-block;background:#C9A86A;color:#1A3C34;padding:6px 12px;border-radius:999px;font-weight:800;font-size:12px;margin-top:12px}
 .tabs{display:flex;gap:8px;margin:20px 0;flex-wrap:wrap}
 .tab{padding:10px 18px;border-radius:999px;background:#fff;border:1px solid #E8DDC5;cursor:pointer;font-weight:700}
 .tab.active{background:#1A3C34;color:#fff}
 .games{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
-@media(max-width:600px){.games{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:28px}}
-.game{background:#fff;border:1px solid #E8DDC5;border-radius:18px;overflow:hidden;cursor:pointer;text-align:left;padding:0}
+@media(max-width:600px){.games{grid-template-columns:repeat(2,1fr)}}
+.game{border-radius:18px;overflow:hidden;cursor:pointer;text-align:left;padding:0;border:1px solid #E8DDC5;color:#fff}
 .game.active{outline:3px solid #1A3C34}
-.game img{width:100%;height:140px;object-fit:cover;display:block;background:#1A3C34}
-.game div{padding:12px}.game b{display:block}.game small{opacity:.7}
+.game .vis{height:120px;display:flex;align-items:center;justify-content:center;font-size:52px}
+.game div{padding:12px;background:#fff;color:#1A3C34}.game b{display:block}.game small{opacity:.7}
 .card{background:#fff;border:1px solid #ECE3CD;border-radius:20px;padding:16px;margin-bottom:12px}
 input,select{width:100%;padding:12px;border-radius:12px;border:1px solid #E8DDC5;margin:6px 0;font-size:15px}
 .btn{background:#1A3C34;color:#fff;border:0;padding:12px 18px;border-radius:999px;font-weight:800;cursor:pointer}
 .btn-gold{background:#C9A86A;color:#1A3C34}.btn-outline{background:#fff;color:#1A3C34;border:1px solid #1A3C34}
 .hidden{display:none}.msg{background:#F3EEDF;padding:10px 12px;border-radius:12px;margin:6px 0}
 .player{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.avatar{width:48px;height:48px;border-radius:50%;background:#1A3C34;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px;flex-shrink:0}
+.avatar{width:48px;height:48px;border-radius:50%;background:#1A3C34;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px}
 .boost{background:#1A3C34;color:#fff;border-radius:20px;padding:20px;margin-top:20px}
 </style>
 </head>
 <body>
-<header><div class="logo">Squad<span>oria</span><div style="font-size:12px;font-weight:400;opacity:.6">Trouve ta squad • 100% gratuit • Zéro pub</div></div><div style="font-weight:700">🎮 <span id="countJoueurs">0</span> joueurs réels</div></header>
+<header><div class="logo">Squad<span>oria</span><div style="font-size:12px;opacity:.6">Trouve ta squad • 100% gratuit • Zéro pub</div></div><div>🎮 <span id="countJoueurs">0</span> joueurs</div></header>
 <div class="wrap">
-<div class="hero"><h1>Trouve ta squad.<br>Joue ensemble, sur console.</h1><p>Choisis ton jeu, trouve des vrais joueurs, discute et lance ta partie.</p><span class="pill">FINALE • VRAIE APP • IMAGES</span></div>
-<div class="tabs">
-<button class="tab active" onclick="showTab('accueil',this)">🏠 Accueil</button>
-<button class="tab" onclick="showTab('messages',this)">💬 Messages</button>
-<button class="tab" onclick="showTab('groupes',this)">👥 Groupes</button>
-</div>
-<div id="accueil">
-<h2>🎮 Tous les jeux</h2>
-<div class="games" id="gamesList"></div>
-<div class="card"><b>✨ Créer mon vrai profil</b>
-<input id="pseudo" placeholder="Ton pseudo ex: Louis">
-<select id="jeu"><option>FC 26</option><option> Fortnite</option><option> Valorant</option><option>GTA V</option><option> 【entity-Call of Duty¦canonical_name=Call of Duty】</option><option> 【entity-Rocket League¦canonical_name=Rocket League】</option><option> 【entity-Minecraft¦canonical_name=Minecraft】</option><option> 【entity-Apex Legends¦canonical_name=Apex Legends】</option><option> 【entity-eFootball¦canonical_name=eFootball】</option><option>EA FC 25</option><option> 【entity-2K¦canonical_name=2K】</option><option>【entity-Fall Guys¦canonical_name=Fall Guys】</option></select>
-<select id="console"><option>PS5</option><option>PS4</option><option>Xbox</option><option>PC</option><option>Mobile</option><option>Switch</option></select>
-<button class="btn btn-gold" onclick="createProfile()">+ Publier mon profil</button><div id="profilOk" style="margin-top:8px;font-weight:700"></div></div>
-<input id="search" placeholder="🔍 Rechercher un joueur ou un jeu..." oninput="renderProfiles()">
-<h3>👥 Joueurs réels</h3>
-<div id="players"><p>Chargement...</p></div>
-<div class="boost"><h3 style="margin:0">⭐ Boost Soutien - 49 MAD / 4,99 €</h3><p style="opacity:.85">Un seul achat, pas d'abonnement. 200 adds / jour, 1 spotlight de 60 min / semaine, badge Soutien, voir tes visiteurs. 100% gratuit sans Boost, pour toujours.</p><button class="btn btn-gold" onclick="alert('Boost bientôt disponible - version test')">Activer Boost Soutien</button></div>
-</div>
-<div id="messages" class="hidden">
-<div class="card"><b>💬 Messages réels</b><div id="chat"></div><input id="msgPseudo" placeholder="Ton pseudo"><input id="msgInput" placeholder="Ton message..."><button class="btn" onclick="sendMsg()">Envoyer</button></div>
-</div>
-<div id="groupes" class="hidden">
-<div class="card"><b>👥 Groupes</b><p>Crée ton groupe et retrouve ta squad.</p><input id="groupeNom" placeholder="Nom du groupe ex: Squad FC 26 Maroc"><button class="btn" onclick="createGroupe()">+ Créer un groupe</button><div id="groupesList" style="margin-top:12px"></div></div>
-</div>
+<div class="hero"><h1>Trouve ta squad.<br>Joue ensemble, sur console.</h1><p>Choisis ton jeu, trouve des vrais joueurs, discute et lance ta partie.</p><span class="pill">VRAIE APP • OUVERTE À TOUS</span></div>
+<div class="tabs"><button class="tab active" onclick="showTab('accueil',this)">🏠 Accueil</button><button class="tab" onclick="showTab('messages',this)">💬 Messages</button><button class="tab" onclick="showTab('groupes',this)">👥 Groupes</button></div>
+<div id="accueil"><h2>🎮 Tous les jeux</h2><div class="games" id="gamesList"></div>
+<div class="card"><b>✨ Créer mon vrai profil - visible par tout le monde</b><input id="pseudo" placeholder="Ton pseudo ex: Louis"><select id="jeu"><option>FC 26</option><option> Fortnite</option><option> Valorant</option><option>GTA V</option><option> Call of Duty</option><option> 【entity-Rocket League¦canonical_name=Rocket League】</option><option> 【entity-Minecraft¦canonical_name=Minecraft】</option><option> 【entity-Apex Legends¦canonical_name=Apex Legends】</option><option> 【entity-eFootball¦canonical_name=eFootball】</option><option>EA FC 25</option><option> 【entity-2K¦canonical_name=2K】</option><option> 【entity-Fall Guys¦canonical_name=Fall Guys】</option></select><select id="console"><option>PS5</option><option>PS4</option><option>Xbox</option><option>PC</option><option>Mobile</option><option>Switch</option></select><button class="btn btn-gold" onclick="createProfile()">+ Publier mon profil</button><div id="profilOk" style="margin-top:8px;font-weight:700"></div></div>
+<input id="search" placeholder="🔍 Rechercher un joueur ou un jeu..." oninput="renderProfiles()"><h3>👥 Joueurs réels - tout le monde peut voir</h3><div id="players"><p>Chargement...</p></div>
+<div id="demandes"><h3>📩 Demandes d'ami réelles</h3><div id="demandesList"><p>Aucune demande pour l'instant.</p></div></div>
+<div class="boost"><h3 style="margin:0">⭐ Boost Soutien - 49 MAD / 4,99 €</h3><p>Un seul achat, pas d'abonnement. 200 adds / jour, 1 spotlight / semaine, badge Soutien.</p><button class="btn btn-gold" onclick="alert('Boost bientôt disponible')">Activer Boost Soutien</button></div></div>
+<div id="messages" class="hidden"><div class="card"><b>💬 Messages réels - tout le monde voit</b><div id="chat"></div><input id="msgPseudo" placeholder="Ton pseudo"><input id="msgInput" placeholder="Ton message..."><button class="btn" onclick="sendMsg()">Envoyer</button></div></div>
+<div id="groupes" class="hidden"><div class="card"><b>👥 Groupes réels - visibles par tous</b><p>Crée ton groupe, tout le monde le verra.</p><input id="groupeNom" placeholder="Nom du groupe ex: Squad FC 26 Maroc"><input id="groupePseudo" placeholder="Ton pseudo"><button class="btn" onclick="createGroupe()">+ Créer un groupe réel</button><div id="groupesList" style="margin-top:12px"></div></div></div>
 </div>
 <script>
 const SUPABASE_URL = "https://ubfsdmbwyvzzenitpszd.supabase.co";
 const SUPABASE_KEY = "sb_publishable_-1pvG0SQOsZzDJTPok_I1g_WVcw4TTq";
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-let allProfiles = [];
-let filtreJeu = "Tous";
-let groupes = [{nom:"Squad FC 26 Maroc", membres:12},{nom:" Fortnite Fun - PS5", membres:8},{nom:" Valorant FR", membres:15}];
+let allProfiles = []; let filtreJeu = "Tous";
 const JEUX = [
-{nom:"Tous", img:"https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80", desc:"Tous les jeux"},
-{nom:"FC 26", img:"https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&q=80", desc:"Football • PS5 / Xbox"},
-{nom:" Fortnite", img:"https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80", desc:"Battle Royale"},
-{nom:" Valorant", img:"https://images.unsplash.com/photo-1547394765-185e1e68f34e?w=800&q=80", desc:"FPS tactique"},
-{nom:"GTA V", img:"https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80", desc:"Monde ouvert • Voitures"},
-{nom:" 【entity-Call of Duty¦canonical_name=Call of Duty】", img:"https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&q=80", desc:"FPS"},
-{nom:" 【entity-Rocket League¦canonical_name=Rocket League】", img:"https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=800&q=80", desc:"Foot + voitures"},
-{nom:" 【entity-Minecraft¦canonical_name=Minecraft】", img:"https://images.unsplash.com/photo-1587654780291-39c9404d746d?w=800&q=80", desc:"Construction"},
-{nom:" 【entity-Apex Legends¦canonical_name=Apex Legends】", img:"https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&q=80", desc:"Battle Royale"},
-{nom:" 【entity-eFootball¦canonical_name=eFootball】", img:"https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&q=80", desc:"Football"},
-{nom:"EA FC 25", img:"https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&q=80", desc:"Football"},
-{nom:" 【entity-2K¦canonical_name=2K】", img:"https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&q=80", desc:"Basket"},
-{nom:"【entity-Fall Guys¦canonical_name=Fall Guys】", img:"https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800&q=80", desc:"Party game"},
+{nom:"Tous", emoji:"🎮", couleur:"#1A3C34", desc:"Tous les jeux"},
+{nom:"FC 26", emoji:"⚽", couleur:"#0E7A3D", desc:"Football • PS5 / Xbox"},
+{nom:" Fortnite", emoji:"🔫", couleur:"#5B2EE5", desc:"Battle Royale"},
+{nom:" Valorant", emoji:"🎯", couleur:"#FF4655", desc:"FPS tactique"},
+{nom:"GTA V", emoji:"🚗", couleur:"#2B2B2B", desc:"Monde ouvert"},
+{nom:" Call of Duty", emoji:"💥", couleur:"#3A3A3A", desc:"FPS"},
+{nom:" 【entity-Rocket League¦canonical_name=Rocket League】", emoji:"🚀", couleur:"#1E6BFF", desc:"Foot + voitures"},
+{nom:" 【entity-Minecraft¦canonical_name=Minecraft】", emoji:"🧱", couleur:"#6B8E23", desc:"Construction"},
+{nom:" 【entity-Apex Legends¦canonical_name=Apex Legends】", emoji:"🏆", couleur:"#C8102E", desc:"Battle Royale"},
+{nom:" 【entity-eFootball¦canonical_name=eFootball】", emoji:"⚽", couleur:"#0E7A3D", desc:"Football"},
+{nom:"EA FC 25", emoji:"⚽", couleur:"#0E7A3D", desc:"Football"},
+{nom:" 【entity-2K¦canonical_name=2K】", emoji:"🏀", couleur:"#FF6B00", desc:"Basket"},
+{nom:" 【entity-Fall Guys¦canonical_name=Fall Guys】", emoji:"🎉", couleur:"#FF69B4", desc:"Party game"},
 ];
-function renderGames(){
-document.getElementById("gamesList").innerHTML = JEUX.map(j=>`<button class="game ${filtreJeu===j.nom?'active':''}" onclick="setJeu('${j.nom}')"><img src="${j.img}"><div><b>${j.nom}</b><small>${j.desc}</small></div></button>`).join("");
-}
+function renderGames(){ document.getElementById("gamesList").innerHTML = JEUX.map(j=>`<button class="game ${filtreJeu===j.nom?'active':''}" onclick="setJeu('${j.nom}')"><div class="vis" style="background:${j.couleur}">${j.emoji}</div><div><b>${j.nom}</b><small>${j.desc}</small></div></button>`).join(""); }
 function setJeu(nom){ filtreJeu = nom; renderGames(); renderProfiles(); }
-function renderGroupes(){
-document.getElementById("groupesList").innerHTML = groupes.map(g=>`<div class="card"><b>${g.nom}</b><div>${g.membres} membres • Groupe public</div><button class="btn btn-outline" style="margin-top:8px" onclick="alert('Groupe rejoint : ${g.nom}')">Rejoindre</button></div>`).join("");
-}
-function createGroupe(){
-let n = document.getElementById("groupeNom").value; if(!n) return;
-groupes.unshift({nom:n, membres:1}); document.getElementById("groupeNom").value=""; renderGroupes();
-}
-async function loadProfiles(){
-let {data} = await sb.from("profiles").select("*").order("created_at",{ascending:false});
-allProfiles = data || []; renderProfiles();
-}
-function renderProfiles(){
-let q = document.getElementById("search").value.toLowerCase();
-let list = allProfiles.filter(p=>{
-let okJeu = filtreJeu==="Tous" || p.jeu===filtreJeu;
-let okQ = (p.pseudo||"").toLowerCase().includes(q) || (p.jeu||"").toLowerCase().includes(q);
-return okJeu && okQ;
-});
-document.getElementById("countJoueurs").innerText = allProfiles.length;
-document.getElementById("players").innerHTML = list.length ? list.map(p=>`<div class="card player"><div style="display:flex;gap:12px;align-items:center"><div class="avatar">${(p.pseudo||"?").charAt(0).toUpperCase()}</div><div><b>${p.pseudo} - ${p.jeu}</b><div style="opacity:.7">${p.console} • Vrai joueur • En ligne</div></div></div><button class="btn" onclick="alert('Demande envoyée à ${p.pseudo}')">+ Ajouter</button></div>`).join("") : `<div class="card"><b>Aucun vrai joueur pour ${filtreJeu} pour l'instant.</b><p>Sois le premier à publier ton profil pour ce jeu.</p></div>`;
-}
-async function createProfile(){
-let pseudo=document.getElementById("pseudo").value;
-let jeu=document.getElementById("jeu").value;
-let consoleV=document.getElementById("console").value;
-if(!pseudo){document.getElementById("profilOk").innerHTML="Mets ton pseudo."; return;}
-let {error} = await sb.from("profiles").insert([{pseudo:pseudo, jeu:jeu, console:consoleV}]);
-if(error){document.getElementById("profilOk").innerHTML="Erreur : "+error.message; return;}
-document.getElementById("profilOk").innerHTML="✅ Profil publié, tout le monde peut te voir.";
-document.getElementById("pseudo").value=""; loadProfiles();
-}
-async function loadMessages(){
-let {data} = await sb.from("messages").select("*").order("created_at",{ascending:true}).limit(50);
-document.getElementById("chat").innerHTML = (data||[]).map(m=>`<div class="msg"><b>${m.pseudo} :</b> ${m.texte}</div>`).join("") || "<p>Aucun message.</p>";
-}
-async function sendMsg(){
-let pseudo=document.getElementById("msgPseudo").value;
-let texte=document.getElementById("msgInput").value;
-if(!pseudo||!texte) return;
-await sb.from("messages").insert([{pseudo:pseudo, texte:texte}]);
-document.getElementById("msgInput").value=""; loadMessages();
-}
-function showTab(id,btn){
-["accueil","messages","groupes"].forEach(x=>document.getElementById(x).classList.toggle("hidden",x!==id));
-document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active")); btn.classList.add("active");
-if(id==="messages") loadMessages(); if(id==="groupes") renderGroupes();
-}
-renderGames(); renderGroupes(); loadProfiles(); loadMessages();
-setInterval(()=>{loadProfiles(); loadMessages();}, 5000);
+async function loadProfiles(){ let {data} = await sb.from("profiles").select("*").order("created_at",{ascending:false}); allProfiles = data || []; renderProfiles(); }
+function renderProfiles(){ let q = document.getElementById("search").value.toLowerCase(); let list = allProfiles.filter(p=>{ let okJeu = filtreJeu==="Tous" || p.jeu===filtreJeu; let okQ = (p.pseudo||"").toLowerCase().includes(q) || (p.jeu||"").toLowerCase().includes(q); return okJeu && okQ; }); document.getElementById("countJoueurs").innerText = allProfiles.length; document.getElementById("players").innerHTML = list.length ? list.map(p=>`<div class="card player"><div style="display:flex;gap:12px;align-items:center"><div class="avatar">${(p.pseudo||"?").charAt(0).toUpperCase()}</div><div><b>${p.pseudo} - ${p.jeu}</b><div style="opacity:.7">${p.console} • Vrai joueur</div></div></div><button class="btn" onclick="addFriend('${p.pseudo}')">+ Ajouter réel</button></div>`).join("") : `<div class="card"><b>Aucun joueur pour ${filtreJeu}.</b><p>Sois le premier.</p></div>`; }
+async function createProfile(){ let pseudo=document.getElementById("pseudo").value; let jeu=document.getElementById("jeu").value; let consoleV=document.getElementById("console").value; if(!pseudo){document.getElementById("profilOk").innerHTML="Mets ton pseudo."; return;} let {error} = await sb.from("profiles").insert([{pseudo:pseudo, jeu:jeu, console:consoleV}]); if(error){document.getElementById("profilOk").innerHTML="Erreur : "+error.message; return;} document.getElementById("profilOk").innerHTML="✅ Profil publié, tout le monde peut te voir."; document.getElementById("pseudo").value=""; loadProfiles(); }
+async function addFriend(toPseudo){ let fromPseudo = prompt("Ton pseudo pour envoyer la demande à " + toPseudo + " ?"); if(!fromPseudo) return; await sb.from("messages").insert([{pseudo:"Squadoria", texte:"DEMANDE_AMI: " + fromPseudo + " veut ajouter " + toPseudo}]); alert("✅ Demande réelle envoyée à " + toPseudo + ". Tout le monde peut la voir."); loadAll(); }
+async function createGroupe(){ let nom=document.getElementById("groupeNom").value; let pseudo=document.getElementById("groupePseudo").value; if(!nom||!pseudo){alert("Mets le nom du groupe et ton pseudo."); return;} await sb.from("messages").insert([{pseudo:"Squadoria", texte:"GROUPE_CREE: " + nom + " créé par " + pseudo}]); document.getElementById("groupeNom").value=""; alert("✅ Groupe réel créé, tout le monde le voit."); loadAll(); }
+async function loadMessages(){ let {data} = await sb.from("messages").select("*").order("created_at",{ascending:true}).limit(100); let all = data || []; let chats = all.filter(m=>!m.texte.startsWith("DEMANDE_AMI:") && !m.texte.startsWith("GROUPE_CREE:")); document.getElementById("chat").innerHTML = chats.map(m=>`<div class="msg"><b>${m.pseudo} :</b> ${m.texte}</div>`).join("") || "<p>Aucun message.</p>"; let demandes = all.filter(m=>m.texte.startsWith("DEMANDE_AMI:")); document.getElementById("demandesList").innerHTML = demandes.length ? demandes.slice(-10).reverse().map(m=>`<div class="msg">${m.texte.replace("DEMANDE_AMI: ","")} • Demande réelle</div>`).join("") : "<p>Aucune demande pour l'instant.</p>"; let groupes = all.filter(m=>m.texte.startsWith("GROUPE_CREE:")); document.getElementById("groupesList").innerHTML = groupes.length ? groupes.slice().reverse().map(m=>`<div class="card"><b>${m.texte.replace("GROUPE_CREE: ","")}</b><div>Groupe réel • Visible par tous</div><button class="btn btn-outline" style="margin-top:8px" onclick="alert('Tu as rejoint ce groupe !')">Rejoindre</button></div>`).join("") : "<p>Aucun groupe pour l'instant. Sois le premier.</p>"; }
+async function sendMsg(){ let pseudo=document.getElementById("msgPseudo").value; let texte=document.getElementById("msgInput").value; if(!pseudo||!texte) return; await sb.from("messages").insert([{pseudo:pseudo, texte:texte}]); document.getElementById("msgInput").value=""; loadAll(); }
+function showTab(id,btn){ ["accueil","messages","groupes"].forEach(x=>document.getElementById(x).classList.toggle("hidden",x!==id)); document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); if(id==="messages"||id==="groupes") loadAll(); }
+function loadAll(){ loadProfiles(); loadMessages(); }
+renderGames(); loadAll(); setInterval(loadAll, 5000);
 </script>
 </body>
 </html>
