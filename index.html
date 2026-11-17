@@ -8,9 +8,9 @@
 <style>
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Arial;background:#FDF8EE;color:#1A3C34}
 header{background:#FDF8EE;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #E8DDC5;position:sticky;top:0;z-index:10}
-.logo{font-size:26px;font-weight:900;letter-spacing:-0.5px}.logo span{color:#C9A86A}
+.logo{font-size:26px;font-weight:900}.logo span{color:#C9A86A}
 .wrap{max-width:1000px;margin:auto;padding:18px}
-.hero{background:#1A3C34;color:#fff;border-radius:28px;padding:28px;overflow:hidden}
+.hero{background:#1A3C34;color:#fff;border-radius:28px;padding:28px}
 .hero h1{margin:0;font-size:34px;line-height:1.1}.hero p{opacity:.85}
 .pill{display:inline-block;background:#C9A86A;color:#1A3C34;padding:6px 12px;border-radius:999px;font-weight:800;font-size:12px;margin-top:12px}
 .tabs{display:flex;gap:8px;margin:20px 0;flex-wrap:wrap}
@@ -18,9 +18,10 @@ header{background:#FDF8EE;padding:14px 20px;display:flex;justify-content:space-b
 .tab.active{background:#1A3C34;color:#fff}
 .games{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
 @media(max-width:600px){.games{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:28px}}
-.game{background:#fff;border:1px solid #E8DDC5;border-radius:18px;padding:14px;cursor:pointer;text-align:left}
-.game.active{border:2px solid #1A3C34;background:#1A3C34;color:#fff}
-.game b{display:block;font-size:15px}.game small{opacity:.7}
+.game{background:#fff;border:1px solid #E8DDC5;border-radius:18px;overflow:hidden;cursor:pointer;text-align:left;padding:0}
+.game.active{outline:3px solid #1A3C34}
+.game img{width:100%;height:130px;object-fit:cover;display:block;background:#1A3C34}
+.game div{padding:12px}.game b{display:block}.game small{opacity:.7}
 .card{background:#fff;border:1px solid #ECE3CD;border-radius:20px;padding:16px;margin-bottom:12px}
 input,select{width:100%;padding:12px;border-radius:12px;border:1px solid #E8DDC5;margin:6px 0;font-size:15px}
 .btn{background:#1A3C34;color:#fff;border:0;padding:12px 18px;border-radius:999px;font-weight:800;cursor:pointer}
@@ -28,71 +29,61 @@ input,select{width:100%;padding:12px;border-radius:12px;border:1px solid #E8DDC5
 .hidden{display:none}.msg{background:#F3EEDF;padding:10px 12px;border-radius:12px;margin:6px 0}
 .player{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .avatar{width:48px;height:48px;border-radius:50%;background:#1A3C34;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px;flex-shrink:0}
-.badge{font-size:11px;background:#FFF3D6;border:1px solid #C9A86A;padding:3px 8px;border-radius:999px}
 .boost{background:#1A3C34;color:#fff;border-radius:20px;padding:20px;margin-top:20px}
 </style>
 </head>
 <body>
 <header><div class="logo">Squad<span>oria</span><div style="font-size:12px;font-weight:400;opacity:.6">Trouve ta squad • 100% gratuit • Zéro pub</div></div><div style="font-weight:700">🎮 <span id="countJoueurs">0</span> joueurs réels</div></header>
 <div class="wrap">
-<div class="hero"><h1>Trouve ta squad.<br>Joue ensemble, sur console.</h1><p>Choisis ton jeu, trouve des vrais joueurs, discute et lance ta partie.</p><span class="pill">VRAIE APP • BASE CONNECTÉE</span></div>
-
+<div class="hero"><h1>Trouve ta squad.<br>Joue ensemble, sur console.</h1><p>Choisis ton jeu, trouve des vrais joueurs, discute et lance ta partie.</p><span class="pill">FINALE • VRAIE APP • IMAGES OFFICIELLES</span></div>
 <div class="tabs">
 <button class="tab active" onclick="showTab('accueil',this)">🏠 Accueil</button>
 <button class="tab" onclick="showTab('messages',this)">💬 Messages</button>
 <button class="tab" onclick="showTab('groupes',this)">👥 Groupes</button>
 </div>
-
 <div id="accueil">
 <h2>🎮 Tous les jeux</h2>
 <div class="games" id="gamesList"></div>
-
 <div class="card"><b>✨ Créer mon vrai profil</b>
 <input id="pseudo" placeholder="Ton pseudo ex: Louis">
-<select id="jeu"><option>FC 26</option><option>Fortnite</option><option>Valorant</option><option>GTA V</option><option>Call of Duty</option><option>Rocket League</option><option>Minecraft</option><option>Apex Legends</option><option>eFootball</option><option>EA FC 25</option><option>2K</option><option>Fall Guys</option></select>
+<select id="jeu"><option>FC 26</option><option>【entity-Fortnite¦canonical_name=Fortnite】</option><option>【entity-Valorant¦canonical_name=Valorant】</option><option>GTA V</option><option>【entity-Call of Duty¦canonical_name=Call of Duty】</option><option>【entity-Rocket League¦canonical_name=Rocket League】</option><option>【entity-Minecraft¦canonical_name=Minecraft】</option><option>【entity-Apex Legends¦canonical_name=Apex Legends】</option><option>【entity-eFootball¦canonical_name=eFootball】</option><option>EA FC 25</option><option>【entity-2K¦canonical_name=2K】</option><option>Fall Guys</option></select>
 <select id="console"><option>PS5</option><option>PS4</option><option>Xbox</option><option>PC</option><option>Mobile</option><option>Switch</option></select>
 <button class="btn btn-gold" onclick="createProfile()">+ Publier mon profil</button><div id="profilOk" style="margin-top:8px;font-weight:700"></div></div>
-
 <input id="search" placeholder="🔍 Rechercher un joueur ou un jeu..." oninput="renderProfiles()">
 <h3>👥 Joueurs réels</h3>
 <div id="players"><p>Chargement...</p></div>
-
 <div class="boost"><h3 style="margin:0">⭐ Boost Soutien - 49 MAD / 4,99 €</h3><p style="opacity:.85">Un seul achat, pas d'abonnement. 200 adds / jour, 1 spotlight de 60 min / semaine, badge Soutien, voir tes visiteurs. 100% gratuit sans Boost, pour toujours.</p><button class="btn btn-gold" onclick="alert('Boost bientôt disponible - version test')">Activer Boost Soutien</button></div>
 </div>
-
 <div id="messages" class="hidden">
-<div class="card"><b>💬 Messages réels - Chat commun</b><div id="chat"></div><input id="msgPseudo" placeholder="Ton pseudo"><input id="msgInput" placeholder="Ton message..."><button class="btn" onclick="sendMsg()">Envoyer</button></div>
+<div class="card"><b>💬 Messages réels</b><div id="chat"></div><input id="msgPseudo" placeholder="Ton pseudo"><input id="msgInput" placeholder="Ton message..."><button class="btn" onclick="sendMsg()">Envoyer</button></div>
 </div>
-
 <div id="groupes" class="hidden">
 <div class="card"><b>👥 Groupes</b><p>Crée ton groupe et retrouve ta squad.</p><input id="groupeNom" placeholder="Nom du groupe ex: Squad FC 26 Maroc"><button class="btn" onclick="createGroupe()">+ Créer un groupe</button><div id="groupesList" style="margin-top:12px"></div></div>
 </div>
 </div>
-
 <script>
 const SUPABASE_URL = "https://ubfsdmbwyvzzenitpszd.supabase.co";
 const SUPABASE_KEY = "sb_publishable_-1pvG0SQOsZzDJTPok_I1g_WVcw4TTq";
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let allProfiles = [];
 let filtreJeu = "Tous";
-let groupes = [{nom:"Squad FC 26 Maroc", membres:12},{nom:"Fortnite Fun - PS5", membres:8},{nom:"Valorant FR", membres:15}];
+let groupes = [{nom:"Squad FC 26 Maroc", membres:12},{nom:"【entity-Fortnite¦canonical_name=Fortnite】 Fun - PS5", membres:8},{nom:"【entity-Valorant¦canonical_name=Valorant】 FR", membres:15}];
 const JEUX = [
-{nom:"Tous", emoji:"🎮", desc:"Tous les jeux"},
-{nom:"FC 26", emoji:"⚽", desc:"Football • PS5 / Xbox"},
-{nom:"Fortnite", emoji:"🔫", desc:"Battle Royale"},
-{nom:"Valorant", emoji:"🎯", desc:"FPS tactique"},
-{nom:"GTA V", emoji:"🚗", desc:"Monde ouvert"},
-{nom:"Call of Duty", emoji:"💥", desc:"FPS"},
-{nom:"Rocket League", emoji:"🚀", desc:"Foot + voitures"},
-{nom:"Minecraft", emoji:"🧱", desc:"Construction"},
-{nom:"Apex Legends", emoji:"🏆", desc:"Battle Royale"},
-{nom:"eFootball", emoji:"⚽", desc:"Football"},
-{nom:"EA FC 25", emoji:"⚽", desc:"Football"},
-{nom:"2K", emoji:"🏀", desc:"Basket"},
-{nom:"Fall Guys", emoji:"🎉", desc:"Party game"},
+{nom:"Tous", img:"https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80", desc:"Tous les jeux"},
+{nom:"FC 26", img:"https://upload.wikimedia.org/wikipedia/en/a/a6/EA_Sports_FC_24_cover.jpg", desc:"Football • PS5 / Xbox"},
+{nom:"【entity-Fortnite¦canonical_name=Fortnite】", img:"https://upload.wikimedia.org/wikipedia/en/7/7c/Fortnite_F_lettermark_logo.png", desc:"Battle Royale"},
+{nom:"【entity-Valorant¦canonical_name=Valorant】", img:"https://upload.wikimedia.org/wikipedia/commons/f/fc/Valorant_logo_-_pink_color_version.svg", desc:"FPS tactique"},
+{nom:"GTA V", img:"https://upload.wikimedia.org/wikipedia/en/a/a5/Grand_Theft_Auto_V.png", desc:"Monde ouvert"},
+{nom:"【entity-Call of Duty¦canonical_name=Call of Duty】", img:"https://upload.wikimedia.org/wikipedia/en/0/05/Call_of_Duty_Black_Ops_6_cover_art.png", desc:"FPS"},
+{nom:"【entity-Rocket League¦canonical_name=Rocket League】", img:"https://upload.wikimedia.org/wikipedia/commons/e/e0/Rocket_League_cover.jpg", desc:"Foot + voitures"},
+{nom:"【entity-Minecraft¦canonical_name=Minecraft】", img:"https://upload.wikimedia.org/wikipedia/en/5/51/Minecraft_cover.png", desc:"Construction"},
+{nom:"【entity-Apex Legends¦canonical_name=Apex Legends】", img:"https://upload.wikimedia.org/wikipedia/en/d/db/Apex_legends_cover.jpg", desc:"Battle Royale"},
+{nom:"【entity-eFootball¦canonical_name=eFootball】", img:"https://upload.wikimedia.org/wikipedia/en/6/6e/EFootball_2023_cover.jpg", desc:"Football"},
+{nom:"EA FC 25", img:"https://upload.wikimedia.org/wikipedia/en/a/a6/EA_Sports_FC_24_cover.jpg", desc:"Football"},
+{nom:"【entity-2K¦canonical_name=2K】", img:"https://upload.wikimedia.org/wikipedia/en/6/6b/NBA_2K25_cover.jpg", desc:"Basket"},
 ];
 function renderGames(){
-document.getElementById("gamesList").innerHTML = JEUX.map(j=>`<button class="game ${filtreJeu===j.nom?'active':''}" onclick="setJeu('${j.nom}')"><span style="font-size:28px">${j.emoji}</span><b>${j.nom}</b><small>${j.desc}</small></button>`).join("");
+document.getElementById("gamesList").innerHTML = JEUX.map(j=>`<button class="game ${filtreJeu===j.nom?'active':''}" onclick="setJeu('${j.nom}')"><img src="${j.img}" onerror="this.src='https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80'"><div><b>${j.nom}</b><small>${j.desc}</small></div></button>`).join("");
 }
 function setJeu(nom){ filtreJeu = nom; renderGames(); renderProfiles(); }
 function renderGroupes(){
@@ -114,7 +105,7 @@ let okQ = (p.pseudo||"").toLowerCase().includes(q) || (p.jeu||"").toLowerCase().
 return okJeu && okQ;
 });
 document.getElementById("countJoueurs").innerText = allProfiles.length;
-document.getElementById("players").innerHTML = list.length ? list.map(p=>`<div class="card player"><div style="display:flex;gap:12px;align-items:center"><div class="avatar">${(p.pseudo||"?").charAt(0).toUpperCase()}</div><div><b>${p.pseudo} - ${p.jeu}</b><div style="opacity:.7">${p.console} • Vrai joueur • En ligne</div></div></div><button class="btn" onclick="alert('Demande envoyée à ${p.pseudo}')">+ Ajouter</button></div>`).join("") : `<div class="card"><b>Aucun vrai joueur pour ${filtreJeu} pour l'instant.</b><p>Sois le premier à publier ton profil pour ce jeu. Ton profil apparaîtra ici pour tout le monde.</p></div>`;
+document.getElementById("players").innerHTML = list.length ? list.map(p=>`<div class="card player"><div style="display:flex;gap:12px;align-items:center"><div class="avatar">${(p.pseudo||"?").charAt(0).toUpperCase()}</div><div><b>${p.pseudo} - ${p.jeu}</b><div style="opacity:.7">${p.console} • Vrai joueur • En ligne</div></div></div><button class="btn" onclick="alert('Demande envoyée à ${p.pseudo}')">+ Ajouter</button></div>`).join("") : `<div class="card"><b>Aucun vrai joueur pour ${filtreJeu} pour l'instant.</b><p>Sois le premier à publier ton profil pour ce jeu.</p></div>`;
 }
 async function createProfile(){
 let pseudo=document.getElementById("pseudo").value;
