@@ -20,7 +20,7 @@ header{background:#FDF8EE;padding:14px 20px;display:flex;justify-content:space-b
 @media(max-width:600px){.games{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:28px}}
 .game{background:#fff;border:1px solid #E8DDC5;border-radius:18px;overflow:hidden;cursor:pointer;text-align:left;padding:0}
 .game.active{outline:3px solid #1A3C34}
-.game img{width:100%;height:130px;object-fit:cover;display:block;background:#1A3C34}
+.game img{width:100%;height:140px;object-fit:cover;display:block;background:#1A3C34}
 .game div{padding:12px}.game b{display:block}.game small{opacity:.7}
 .card{background:#fff;border:1px solid #ECE3CD;border-radius:20px;padding:16px;margin-bottom:12px}
 input,select{width:100%;padding:12px;border-radius:12px;border:1px solid #E8DDC5;margin:6px 0;font-size:15px}
@@ -35,7 +35,7 @@ input,select{width:100%;padding:12px;border-radius:12px;border:1px solid #E8DDC5
 <body>
 <header><div class="logo">Squad<span>oria</span><div style="font-size:12px;font-weight:400;opacity:.6">Trouve ta squad • 100% gratuit • Zéro pub</div></div><div style="font-weight:700">🎮 <span id="countJoueurs">0</span> joueurs réels</div></header>
 <div class="wrap">
-<div class="hero"><h1>Trouve ta squad.<br>Joue ensemble, sur console.</h1><p>Choisis ton jeu, trouve des vrais joueurs, discute et lance ta partie.</p><span class="pill">FINALE • VRAIE APP • IMAGES OFFICIELLES</span></div>
+<div class="hero"><h1>Trouve ta squad.<br>Joue ensemble, sur console.</h1><p>Choisis ton jeu, trouve des vrais joueurs, discute et lance ta partie.</p><span class="pill">FINALE • VRAIE APP • IMAGES</span></div>
 <div class="tabs">
 <button class="tab active" onclick="showTab('accueil',this)">🏠 Accueil</button>
 <button class="tab" onclick="showTab('messages',this)">💬 Messages</button>
@@ -46,7 +46,7 @@ input,select{width:100%;padding:12px;border-radius:12px;border:1px solid #E8DDC5
 <div class="games" id="gamesList"></div>
 <div class="card"><b>✨ Créer mon vrai profil</b>
 <input id="pseudo" placeholder="Ton pseudo ex: Louis">
-<select id="jeu"><option>FC 26</option><option>【entity-Fortnite¦canonical_name=Fortnite】</option><option>【entity-Valorant¦canonical_name=Valorant】</option><option>GTA V</option><option>【entity-Call of Duty¦canonical_name=Call of Duty】</option><option>【entity-Rocket League¦canonical_name=Rocket League】</option><option>【entity-Minecraft¦canonical_name=Minecraft】</option><option>【entity-Apex Legends¦canonical_name=Apex Legends】</option><option>【entity-eFootball¦canonical_name=eFootball】</option><option>EA FC 25</option><option>【entity-2K¦canonical_name=2K】</option><option>Fall Guys</option></select>
+<select id="jeu"><option>FC 26</option><option> Fortnite</option><option> Valorant</option><option>GTA V</option><option> 【entity-Call of Duty¦canonical_name=Call of Duty】</option><option> 【entity-Rocket League¦canonical_name=Rocket League】</option><option> 【entity-Minecraft¦canonical_name=Minecraft】</option><option> 【entity-Apex Legends¦canonical_name=Apex Legends】</option><option> 【entity-eFootball¦canonical_name=eFootball】</option><option>EA FC 25</option><option> 【entity-2K¦canonical_name=2K】</option><option>【entity-Fall Guys¦canonical_name=Fall Guys】</option></select>
 <select id="console"><option>PS5</option><option>PS4</option><option>Xbox</option><option>PC</option><option>Mobile</option><option>Switch</option></select>
 <button class="btn btn-gold" onclick="createProfile()">+ Publier mon profil</button><div id="profilOk" style="margin-top:8px;font-weight:700"></div></div>
 <input id="search" placeholder="🔍 Rechercher un joueur ou un jeu..." oninput="renderProfiles()">
@@ -67,23 +67,24 @@ const SUPABASE_KEY = "sb_publishable_-1pvG0SQOsZzDJTPok_I1g_WVcw4TTq";
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let allProfiles = [];
 let filtreJeu = "Tous";
-let groupes = [{nom:"Squad FC 26 Maroc", membres:12},{nom:"【entity-Fortnite¦canonical_name=Fortnite】 Fun - PS5", membres:8},{nom:"【entity-Valorant¦canonical_name=Valorant】 FR", membres:15}];
+let groupes = [{nom:"Squad FC 26 Maroc", membres:12},{nom:" Fortnite Fun - PS5", membres:8},{nom:" Valorant FR", membres:15}];
 const JEUX = [
 {nom:"Tous", img:"https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80", desc:"Tous les jeux"},
-{nom:"FC 26", img:"https://upload.wikimedia.org/wikipedia/en/a/a6/EA_Sports_FC_24_cover.jpg", desc:"Football • PS5 / Xbox"},
-{nom:"【entity-Fortnite¦canonical_name=Fortnite】", img:"https://upload.wikimedia.org/wikipedia/en/7/7c/Fortnite_F_lettermark_logo.png", desc:"Battle Royale"},
-{nom:"【entity-Valorant¦canonical_name=Valorant】", img:"https://upload.wikimedia.org/wikipedia/commons/f/fc/Valorant_logo_-_pink_color_version.svg", desc:"FPS tactique"},
-{nom:"GTA V", img:"https://upload.wikimedia.org/wikipedia/en/a/a5/Grand_Theft_Auto_V.png", desc:"Monde ouvert"},
-{nom:"【entity-Call of Duty¦canonical_name=Call of Duty】", img:"https://upload.wikimedia.org/wikipedia/en/0/05/Call_of_Duty_Black_Ops_6_cover_art.png", desc:"FPS"},
-{nom:"【entity-Rocket League¦canonical_name=Rocket League】", img:"https://upload.wikimedia.org/wikipedia/commons/e/e0/Rocket_League_cover.jpg", desc:"Foot + voitures"},
-{nom:"【entity-Minecraft¦canonical_name=Minecraft】", img:"https://upload.wikimedia.org/wikipedia/en/5/51/Minecraft_cover.png", desc:"Construction"},
-{nom:"【entity-Apex Legends¦canonical_name=Apex Legends】", img:"https://upload.wikimedia.org/wikipedia/en/d/db/Apex_legends_cover.jpg", desc:"Battle Royale"},
-{nom:"【entity-eFootball¦canonical_name=eFootball】", img:"https://upload.wikimedia.org/wikipedia/en/6/6e/EFootball_2023_cover.jpg", desc:"Football"},
-{nom:"EA FC 25", img:"https://upload.wikimedia.org/wikipedia/en/a/a6/EA_Sports_FC_24_cover.jpg", desc:"Football"},
-{nom:"【entity-2K¦canonical_name=2K】", img:"https://upload.wikimedia.org/wikipedia/en/6/6b/NBA_2K25_cover.jpg", desc:"Basket"},
+{nom:"FC 26", img:"https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&q=80", desc:"Football • PS5 / Xbox"},
+{nom:" Fortnite", img:"https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80", desc:"Battle Royale"},
+{nom:" Valorant", img:"https://images.unsplash.com/photo-1547394765-185e1e68f34e?w=800&q=80", desc:"FPS tactique"},
+{nom:"GTA V", img:"https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80", desc:"Monde ouvert • Voitures"},
+{nom:" 【entity-Call of Duty¦canonical_name=Call of Duty】", img:"https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&q=80", desc:"FPS"},
+{nom:" 【entity-Rocket League¦canonical_name=Rocket League】", img:"https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=800&q=80", desc:"Foot + voitures"},
+{nom:" 【entity-Minecraft¦canonical_name=Minecraft】", img:"https://images.unsplash.com/photo-1587654780291-39c9404d746d?w=800&q=80", desc:"Construction"},
+{nom:" 【entity-Apex Legends¦canonical_name=Apex Legends】", img:"https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&q=80", desc:"Battle Royale"},
+{nom:" 【entity-eFootball¦canonical_name=eFootball】", img:"https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&q=80", desc:"Football"},
+{nom:"EA FC 25", img:"https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&q=80", desc:"Football"},
+{nom:" 【entity-2K¦canonical_name=2K】", img:"https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&q=80", desc:"Basket"},
+{nom:"【entity-Fall Guys¦canonical_name=Fall Guys】", img:"https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800&q=80", desc:"Party game"},
 ];
 function renderGames(){
-document.getElementById("gamesList").innerHTML = JEUX.map(j=>`<button class="game ${filtreJeu===j.nom?'active':''}" onclick="setJeu('${j.nom}')"><img src="${j.img}" onerror="this.src='https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80'"><div><b>${j.nom}</b><small>${j.desc}</small></div></button>`).join("");
+document.getElementById("gamesList").innerHTML = JEUX.map(j=>`<button class="game ${filtreJeu===j.nom?'active':''}" onclick="setJeu('${j.nom}')"><img src="${j.img}"><div><b>${j.nom}</b><small>${j.desc}</small></div></button>`).join("");
 }
 function setJeu(nom){ filtreJeu = nom; renderGames(); renderProfiles(); }
 function renderGroupes(){
