@@ -38,7 +38,7 @@ input,select{width:100%;padding:12px;border-radius:12px;border:1px solid #E8DDC5
 <div class="hero"><h1>Trouve ta squad.<br>Joue ensemble, sur console.</h1><p>Choisis ton jeu, trouve des vrais joueurs, discute et lance ta partie.</p><span class="pill">VRAIE APP • OUVERTE À TOUS</span></div>
 <div class="tabs"><button class="tab active" onclick="showTab('accueil',this)">🏠 Accueil</button><button class="tab" onclick="showTab('messages',this)">💬 Messages</button><button class="tab" onclick="showTab('groupes',this)">👥 Groupes</button></div>
 <div id="accueil"><h2>🎮 Tous les jeux</h2><div class="games" id="gamesList"></div>
-<div class="card"><b>✨ Créer mon vrai profil - visible par tout le monde</b><input id="pseudo" placeholder="Ton pseudo ex: Louis"><select id="jeu"><option>FC 26</option><option> Fortnite</option><option> Valorant</option><option>GTA V</option><option> Call of Duty</option><option> 【entity-Rocket League¦canonical_name=Rocket League】</option><option> 【entity-Minecraft¦canonical_name=Minecraft】</option><option> 【entity-Apex Legends¦canonical_name=Apex Legends】</option><option> 【entity-eFootball¦canonical_name=eFootball】</option><option>EA FC 25</option><option> 【entity-2K¦canonical_name=2K】</option><option> 【entity-Fall Guys¦canonical_name=Fall Guys】</option></select><select id="console"><option>PS5</option><option>PS4</option><option>Xbox</option><option>PC</option><option>Mobile</option><option>Switch</option></select><button class="btn btn-gold" onclick="createProfile()">+ Publier mon profil</button><div id="profilOk" style="margin-top:8px;font-weight:700"></div></div>
+<div class="card"><b>✨ Créer mon vrai profil - visible par tout le monde</b><input id="pseudo" placeholder="Ton pseudo ex: Louis"><select id="jeu"><option>FC 26</option><option>Fortnite</option><option>Valorant</option><option>GTA V</option><option>【entity-Call of Duty¦canonical_name=Call of Duty】</option><option>【entity-Rocket League¦canonical_name=Rocket League】</option><option>【entity-Minecraft¦canonical_name=Minecraft】</option><option>【entity-Apex Legends¦canonical_name=Apex Legends】</option><option>【entity-eFootball¦canonical_name=eFootball】</option><option>EA FC 25</option><option>2K</option><option>【entity-Fall Guys¦canonical_name=Fall Guys】</option></select><select id="console"><option>PS5</option><option>PS4</option><option>Xbox</option><option>PC</option><option>Mobile</option><option>Switch</option></select><button class="btn btn-gold" onclick="createProfile()">+ Publier mon profil</button><div id="profilOk" style="margin-top:8px;font-weight:700"></div></div>
 <input id="search" placeholder="🔍 Rechercher un joueur ou un jeu..." oninput="renderProfiles()"><h3>👥 Joueurs réels - tout le monde peut voir</h3><div id="players"><p>Chargement...</p></div>
 <div id="demandes"><h3>📩 Demandes d'ami réelles</h3><div id="demandesList"><p>Aucune demande pour l'instant.</p></div></div>
 <div class="boost"><h3 style="margin:0">⭐ Boost Soutien - 49 MAD / 4,99 €</h3><p>Un seul achat, pas d'abonnement. 200 adds / jour, 1 spotlight / semaine, badge Soutien.</p><button class="btn btn-gold" onclick="alert('Boost bientôt disponible')">Activer Boost Soutien</button></div></div>
@@ -53,17 +53,17 @@ let allProfiles = []; let filtreJeu = "Tous";
 const JEUX = [
 {nom:"Tous", emoji:"🎮", couleur:"#1A3C34", desc:"Tous les jeux"},
 {nom:"FC 26", emoji:"⚽", couleur:"#0E7A3D", desc:"Football • PS5 / Xbox"},
-{nom:" Fortnite", emoji:"🔫", couleur:"#5B2EE5", desc:"Battle Royale"},
-{nom:" Valorant", emoji:"🎯", couleur:"#FF4655", desc:"FPS tactique"},
+{nom:"Fortnite", emoji:"🔫", couleur:"#5B2EE5", desc:"Battle Royale"},
+{nom:"Valorant", emoji:"🎯", couleur:"#FF4655", desc:"FPS tactique"},
 {nom:"GTA V", emoji:"🚗", couleur:"#2B2B2B", desc:"Monde ouvert"},
-{nom:" Call of Duty", emoji:"💥", couleur:"#3A3A3A", desc:"FPS"},
-{nom:" 【entity-Rocket League¦canonical_name=Rocket League】", emoji:"🚀", couleur:"#1E6BFF", desc:"Foot + voitures"},
-{nom:" 【entity-Minecraft¦canonical_name=Minecraft】", emoji:"🧱", couleur:"#6B8E23", desc:"Construction"},
-{nom:" 【entity-Apex Legends¦canonical_name=Apex Legends】", emoji:"🏆", couleur:"#C8102E", desc:"Battle Royale"},
-{nom:" 【entity-eFootball¦canonical_name=eFootball】", emoji:"⚽", couleur:"#0E7A3D", desc:"Football"},
+{nom:"【entity-Call of Duty¦canonical_name=Call of Duty】", emoji:"💥", couleur:"#3A3A3A", desc:"FPS"},
+{nom:"【entity-Rocket League¦canonical_name=Rocket League】", emoji:"🚀", couleur:"#1E6BFF", desc:"Foot + voitures"},
+{nom:"【entity-Minecraft¦canonical_name=Minecraft】", emoji:"🧱", couleur:"#6B8E23", desc:"Construction"},
+{nom:"【entity-Apex Legends¦canonical_name=Apex Legends】", emoji:"🏆", couleur:"#C8102E", desc:"Battle Royale"},
+{nom:"【entity-eFootball¦canonical_name=eFootball】", emoji:"⚽", couleur:"#0E7A3D", desc:"Football"},
 {nom:"EA FC 25", emoji:"⚽", couleur:"#0E7A3D", desc:"Football"},
-{nom:" 【entity-2K¦canonical_name=2K】", emoji:"🏀", couleur:"#FF6B00", desc:"Basket"},
-{nom:" 【entity-Fall Guys¦canonical_name=Fall Guys】", emoji:"🎉", couleur:"#FF69B4", desc:"Party game"},
+{nom:"【entity-2K¦canonical_name=2K】", emoji:"🏀", couleur:"#FF6B00", desc:"Basket"},
+{nom:"【entity-Fall Guys¦canonical_name=Fall Guys】", emoji:"🎉", couleur:"#FF69B4", desc:"Party game"},
 ];
 function renderGames(){ document.getElementById("gamesList").innerHTML = JEUX.map(j=>`<button class="game ${filtreJeu===j.nom?'active':''}" onclick="setJeu('${j.nom}')"><div class="vis" style="background:${j.couleur}">${j.emoji}</div><div><b>${j.nom}</b><small>${j.desc}</small></div></button>`).join(""); }
 function setJeu(nom){ filtreJeu = nom; renderGames(); renderProfiles(); }
